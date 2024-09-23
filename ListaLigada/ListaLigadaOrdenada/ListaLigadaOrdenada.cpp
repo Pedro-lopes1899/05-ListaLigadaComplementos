@@ -70,7 +70,7 @@ void menu()
 
 void inicializar()
 {
-	// se a lista j� possuir elementos
+	// se a lista já possuir elementos
 // libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
@@ -117,37 +117,114 @@ void inserirElemento()
 	// aloca memoria dinamicamente para o novo elemento
 	NO* novo = (NO*)malloc(sizeof(NO));
 	if (novo == NULL)
-	{
-		return;
-	}
+	    NO* novo = (NO*)malloc(sizeof(NO));
+    if (novo == NULL) {
+        return; 
+    }
 
-	cout << "Digite o elemento: ";
-	cin >> novo->valor;
-	novo->prox = NULL;
+    cout << "Digite o elemento: ";
+    cin >> novo->valor;
+    novo->prox = NULL;
 
-	if (primeiro == NULL)
-	{
-		primeiro = novo;
-	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
-	}
+    NO* aux2 = primeiro;
+    bool elementoRepetido = false;
+
+    while (aux2 != NULL) {
+        if (aux2->valor == novo->valor) {
+            elementoRepetido = true;
+            break; 
+        }
+        aux2 = aux2->prox; 
+    }
+
+    if (elementoRepetido) {
+        free(novo); 
+        cout << "Este elemento já existe na lista" << endl;
+    }
+    else {
+        if (primeiro == NULL) {
+            primeiro = novo;
+        } 
+        else if (primeiro->valor > novo->valor) {
+            novo->prox = primeiro;
+            primeiro = novo;
+        }
+        else {
+            NO* aux = primeiro;
+
+            while (aux->prox != NULL && aux->prox->valor < novo->valor) {
+                aux = aux->prox; 
+            }
+
+            novo->prox = aux->prox;
+            aux->prox = novo;    
+        }
+    }
 }
 
 void excluirElemento()
 {
+    int valorDeletar;
+    cout << "Digite um elemento para efetuar a exclusao: ";
+    cin >> valorDeletar;
 
+    if (primeiro == NULL) {
+        cout << "A lista esta vazia." << endl;
+        return;
+    }
+
+
+    if (primeiro->valor == valorDeletar) {
+        NO* temp = primeiro;
+        primeiro = primeiro->prox;  
+        delete temp;  
+        cout << "Elemento excluido com sucesso!" << endl;
+        return;
+    }
+
+
+    NO* aux = primeiro;
+    while (aux->prox != NULL && aux->prox->valor != valorDeletar) {
+        aux = aux->prox;  
+    }
+
+    if (aux->prox == NULL) {
+        cout << "Elemento não encontrado na lista." << endl;
+        return;
+    }
+
+
+    NO* deletar = aux->prox;  
+    aux->prox = deletar->prox;  
+    delete deletar;  
+    cout << "Elemento excluído com sucesso!" << endl;
 }
+
 
 void buscarElemento()
 {
+    if (primeiro == NULL) {
+        cout << "A lista esta vazia." << endl;
+        return;
+    }
 
+    int valorBusca;
+    cout << "Digite o valor que deseja buscar: ";
+    cin >> valorBusca;
+
+    NO* aux = primeiro;
+    int posicao = 1; 
+
+    while (aux != NULL) {
+        if (aux->valor == valorBusca) {
+            cout << "Elemento " << valorBusca << " encontrado na posiçao " << posicao << "." << endl;
+            return;
+        }
+        aux = aux->prox;  
+        posicao++;  
+    }
+
+    cout << "Elemento " << valorBusca << " nao encontrado na lista." << endl;
 }
 
 
